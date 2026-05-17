@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Beat The Record - Leaderboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #111;
+      --dark: #1e1e1e;
+      --panel: #2C2C2C;
+      --border: #3a3a3a;
+      --gray: #555;
+      --light: #8b8b8b;
+      --white: #E0E0E0;
+      --green: #4CAF50;
+      --green-dark: #2e7d32;
+      --gold: #FFD700;
+      --silver: #C0C0C0;
+      --bronze: #CD7F32;
+      --blue: #5B9BD5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--black);
+      font-family: 'VT323', monospace;
+      color: var(--white);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(255,255,255,0.02) 32px),
+        repeating-linear-gradient(90deg, transparent, transparent 31px, rgba(255,255,255,0.02) 32px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 24px;
+    }
+
+    .title {
+      font-size: 3.2rem;
+      color: var(--green);
+      text-shadow: 3px 3px 0 var(--green-dark);
+      letter-spacing: 4px;
+      line-height: 1;
+    }
+
+    .meta {
+      font-size: 1.35rem;
+      color: var(--gray);
+      letter-spacing: 1px;
+      margin-top: 6px;
+    }
+
+    .meta a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .meta a:hover { color: var(--white); }
+
+    /* Filter tabs */
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .ftab {
+      font-family: 'VT323', monospace;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      padding: 5px 18px;
+      background: var(--dark);
+      border: 4px solid var(--border);
+      color: var(--light);
+      cursor: pointer;
+      transition: color 0.1s, border-color 0.1s;
+      box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4), 0 3px 0 #000;
+      position: relative;
+      top: 0;
+    }
+
+    .ftab:hover { color: var(--white); border-color: var(--gray); }
+
+    .ftab:active { top: 3px; box-shadow: inset 2px 2px 4px rgba(0,0,0,0.4); }
+
+    .ftab.active        { color: var(--white); border-color: var(--green); background: var(--green-dark); }
+    .ftab.active.kbm    { border-color: #5B9BD5; background: #1565C0; }
+    .ftab.active.ctrl   { border-color: #AB47BC; background: #6A1B9A; }
+    .ftab.active.touch  { border-color: #FF7043; background: #BF360C; }
+
+    /* Table */
+    .board {
+      background: var(--panel);
+      border: 8px solid var(--border);
+      box-shadow:
+        inset 4px 4px 8px rgba(0,0,0,0.5),
+        inset -4px -4px 8px rgba(255,255,255,0.04);
+      position: relative;
+    }
+
+    .board::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      background: repeating-linear-gradient(90deg, var(--border) 0, var(--border) 4px, var(--black) 4px, var(--black) 8px);
+      z-index: -1;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 52px 1fr 120px 110px 100px;
+      padding: 11px 18px;
+      border-bottom: 2px solid var(--border);
+      align-items: center;
+      font-size: 1.55rem;
+    }
+
+    .row:last-child { border-bottom: none; }
+    .row.head { font-size: 1.1rem; letter-spacing: 2px; color: var(--gray); border-bottom: 3px solid var(--border); }
+    .row.data:hover { background: rgba(255,255,255,0.03); }
+
+    .rank { font-size: 1.8rem; font-weight: bold; }
+    .r1 { color: var(--gold); }
+    .r2 { color: var(--silver); }
+    .r3 { color: var(--bronze); }
+    .rn { color: var(--gray); font-size: 1.4rem; }
+
+    .time { color: var(--green); letter-spacing: 1px; }
+    .date { color: var(--light); font-size: 1.3rem; }
+
+    .badge {
+      font-size: 1.1rem;
+      padding: 2px 8px;
+      border: 2px solid;
+      letter-spacing: 1px;
+      display: inline-block;
+    }
+    .b-kbm   { background: #0D47A1; color: #90CAF9; border-color: #1565C0; }
+    .b-ctrl  { background: #4A148C; color: #CE93D8; border-color: #6A1B9A; }
+    .b-touch { background: #BF360C; color: #FFCCBC; border-color: #D84315; }
+
+    /* Empty */
+    .empty {
+      padding: 50px 20px;
+      text-align: center;
+      font-size: 1.8rem;
+      color: var(--gray);
+      letter-spacing: 2px;
+    }
+
+    .blink { animation: bl 1.2s step-start infinite; }
+    @keyframes bl { 50% { opacity: 0; } }
+
+    @media (max-width: 600px) {
+      .row { grid-template-columns: 44px 1fr 100px 80px; }
+      .col-input { display: none; }
+      .title { font-size: 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <div class="header">
+      <div class="title">BEAT THE RECORD</div>
+      <div class="meta">June 1 - 14, 2025 &nbsp;|&nbsp; 1.21+ RSG &nbsp;|&nbsp; <a href="manifesto.html">manifesto</a></div>
+    </div>
+
+    <div class="filters">
+      <button class="ftab active" onclick="setFilter('all',this)">ALL</button>
+      <button class="ftab kbm"   onclick="setFilter('kbm',this)">KBM</button>
+      <button class="ftab ctrl"  onclick="setFilter('controller',this)">CONTROLLER</button>
+      <button class="ftab touch" onclick="setFilter('touchscreen',this)">TOUCHSCREEN</button>
+    </div>
+
+    <div class="board">
+      <div class="row head">
+        <span>#</span>
+        <span>RUNNER</span>
+        <span>TIME</span>
+        <span class="col-input">INPUT</span>
+        <span>DATE</span>
+      </div>
+      <div id="body"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // ── ADD RUNS HERE ──────────────────────────────────────────────────
+    // { runner: "name", time: "MM:SS" or "H:MM:SS", input: "kbm"|"controller"|"touchscreen", date: "Jun X" }
+    const runs = [
+
+    ];
+    // ──────────────────────────────────────────────────────────────────
+
+    function toSec(t) {
+      const p = t.split(':').map(Number);
+      return p.length === 3 ? p[0]*3600+p[1]*60+p[2] : p[0]*60+p[1];
+    }
+
+    const sorted = [...runs].sort((a,b) => toSec(a.time) - toSec(b.time));
+    const inputRank = {};
+    const ranked = sorted.map((r, i) => {
+      inputRank[r.input] = (inputRank[r.input]||0) + 1;
+      return { ...r, g: i+1, ir: inputRank[r.input] };
+    });
+
+    let filter = 'all';
+
+    function setFilter(f, el) {
+      filter = f;
+      document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      render();
+    }
+
+    function badgeClass(inp) {
+      return { kbm:'b-kbm', controller:'b-ctrl', touchscreen:'b-touch' }[inp]||'';
+    }
+
+    function badgeLabel(inp) {
+      return { kbm:'KBM', controller:'CTRL', touchscreen:'TOUCH' }[inp]||inp;
+    }
+
+    function render() {
+      const el = document.getElementById('body');
+      const list = filter === 'all' ? ranked : ranked.filter(r => r.input === filter);
+
+      if (!list.length) {
+        el.innerHTML = `<div class="empty">NO RUNS YET <span class="blink">_</span></div>`;
+        return;
+      }
+
+      el.innerHTML = list.map((r, i) => {
+        const n = i + 1;
+        const rc = n===1?'r1':n===2?'r2':n===3?'r3':'rn';
+        const medal = n===1?'1st':n===2?'2nd':n===3?'3rd':n;
+        return `<div class="row data">
+          <span class="rank ${rc}">${medal}</span>
+          <span>${r.runner}</span>
+          <span class="time">${r.time}</span>
+          <span class="col-input"><span class="badge ${badgeClass(r.input)}">${badgeLabel(r.input)}</span></span>
+          <span class="date">${r.date}</span>
+        </div>`;
+      }).join('');
+    }
+
+    render();
+  </script>
+</body>
+</html>

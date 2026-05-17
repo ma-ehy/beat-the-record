@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Beat The Record - Manifesto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'VT323', monospace;
+    }
+
+    .poster {
+      width: 520px;
+      background: #1e1e1e;
+      border: 8px solid #3a3a3a;
+      box-shadow:
+        inset 4px 4px 0 #2a2a2a,
+        inset -4px -4px 0 #111,
+        0 0 0 4px #111,
+        0 0 0 8px #3a3a3a;
+      padding: 36px 40px 32px;
+      position: relative;
+    }
+
+    .poster::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      background: repeating-linear-gradient(
+        90deg,
+        #3a3a3a 0, #3a3a3a 4px,
+        #111 4px, #111 8px
+      );
+      z-index: -1;
+    }
+
+    .title {
+      font-size: 3.8rem;
+      color: #4CAF50;
+      text-shadow: 3px 3px 0 #2e7d32;
+      letter-spacing: 4px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 1.45rem;
+      color: #777;
+      letter-spacing: 2px;
+      margin-bottom: 28px;
+    }
+
+    .divider {
+      height: 3px;
+      background: repeating-linear-gradient(
+        90deg, #3a3a3a 0, #3a3a3a 6px, transparent 6px, transparent 10px
+      );
+      margin-bottom: 20px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+    }
+
+    .row .label { color: #555; }
+    .row .value { color: #E0E0E0; }
+    .row .value.green { color: #4CAF50; }
+
+    .prizes-title {
+      font-size: 1.15rem;
+      color: #444;
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+      margin-top: 24px;
+    }
+
+    .prizes {
+      display: flex;
+      gap: 10px;
+    }
+
+    .prize {
+      flex: 1;
+      background: #151515;
+      border: 4px solid #3a3a3a;
+      box-shadow: inset 2px 2px 4px rgba(0,0,0,0.6);
+      padding: 12px 8px;
+      text-align: center;
+    }
+
+    .prize .place { font-size: 1.2rem; color: #555; letter-spacing: 1px; }
+    .prize .elo   { font-size: 2.2rem; letter-spacing: 1px; }
+
+    .prize.gold   .elo { color: #FFD700; }
+    .prize.silver .elo { color: #C0C0C0; }
+    .prize.bronze .elo { color: #CD7F32; }
+
+    .prize-note {
+      font-size: 1.15rem;
+      color: #444;
+      letter-spacing: 1px;
+      margin-top: 10px;
+    }
+
+    .footer-link {
+      display: block;
+      margin-top: 26px;
+      font-size: 1.25rem;
+      color: #5B9BD5;
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="poster">
+    <div class="title">BEAT THE RECORD</div>
+    <div class="subtitle">Two weeks, one category: the fastest time wins!</div>
+
+    <div class="divider"></div>
+
+    <div class="row">
+      <span class="label">DATES</span>
+      <span class="value">June 1 - June 14, 2025</span>
+    </div>
+    <div class="row">
+      <span class="label">CATEGORY</span>
+      <span class="value green">1.21+ RSG</span>
+    </div>
+    <div class="row">
+      <span class="label">INPUTS</span>
+      <span class="value">KBM / Controller / Touch</span>
+    </div>
+    <div class="row">
+      <span class="label">FORMAT</span>
+      <span class="value">Top 3 per input win prizes</span>
+    </div>
+
+    <div class="prizes-title">ELO PRIZES (per input)</div>
+    <div class="prizes">
+      <div class="prize gold">
+        <div class="place">1st</div>
+        <div class="elo">+50</div>
+      </div>
+      <div class="prize silver">
+        <div class="place">2nd</div>
+        <div class="elo">+30</div>
+      </div>
+      <div class="prize bronze">
+        <div class="place">3rd</div>
+        <div class="elo">+20</div>
+      </div>
+    </div>
+    <div class="prize-note">awarded in Bedrock Ranked</div>
+
+    <a class="footer-link" href="index.html">[ leaderboard ]</a>
+  </div>
+</body>
+</html>
